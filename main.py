@@ -27,12 +27,11 @@ if prompt := st.chat_input("What is up?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     
     # Generate chatbot response
-    if len(st.session_state.messages) >= 2:
-        for response in generate_response(
-                prompt, st.session_state.messages, index,
-                st.session_state['model_name'], st.session_state['temperature'],
-                st.session_state['current_stage_index']):
-            st.session_state.messages.append({"role": "assistant", "content": response['content']})
+    for response in generate_response(
+            prompt, st.session_state.messages, index,
+            st.session_state['model_name'], st.session_state['temperature'],
+            st.session_state['current_stage_index']):
+        st.session_state.messages.append({"role": "assistant", "content": response['content']})
     else:
         st.warning("Not enough conversation history.")
 
