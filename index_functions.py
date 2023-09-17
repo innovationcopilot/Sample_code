@@ -8,6 +8,7 @@ import nltk
 nltk.download('punkt')
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import requests
 
 # Function for constructing an index out of a knowledge base and appending indexed information to our prompt
 def construct_index(directory_path):
