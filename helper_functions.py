@@ -25,7 +25,7 @@ def generate_response(prompt, history, model_name, temperature):
         ]
       )
       response = response['choices'][0]['message']['content']
-      return response
+      return {'content': response}
 
 
 #################################################################################
