@@ -13,8 +13,8 @@ def generate_response(prompt, history, model_name, temperature):
       ### Your latest message to me: {chatbot_message}. \n\
       ### Previous conversation history for context: {history}"
       
-      relevant_info = index.query()
-      full_prompt += f"\n### Relevant data from documents: {relevant_info}"
+      # relevant_info = index.query()
+      # full_prompt += f"\n### Relevant data from documents: {relevant_info}"
       
       response = openai.ChatCompletion.create(
         model=model_name,
