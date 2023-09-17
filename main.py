@@ -10,7 +10,7 @@ from index_functions import *
 if 'api_key' in st.session_state and st.session_state['api_key']:
     openai.api_key = st.session_state['api_key']
 else:
-    st.warning("OpenAI API key not provided. Please enter it in the sidebar.")
+    st.sidebar.warning("OpenAI API key not provided. Please enter it in the sidebar.")
 
 # Initialize session state variables if they don't exist
 initialize_session_state()
@@ -27,7 +27,7 @@ if 'directory_path' in st.session_state and st.session_state['directory_path']:
     directory_path = st.session_state['directory_path']
     index = construct_index(directory_path)
 else:
-    st.warning("Directory path isn't uploaded to serve as chatbot knowledge base. Please upload it in sidebar if you'd like to query information.")
+    st.sidebar.warning("Directory path isn't uploaded to serve as chatbot knowledge base. Please upload it in sidebar if you'd like to query information.")
 
 # Main chat loop to display messages
 for message in st.session_state.messages:
