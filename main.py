@@ -51,17 +51,17 @@ if prompt := st.chat_input("How would you like to reply?"):
     # This function is assumed to be defined in your helper_functions.py
     response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, index, st.session_state['model_name'], st.session_state['temperature'])
         
-        # Create spinner while response is generating
-        with st.spinner('CoPilot is thinking...'):
-            with st.chat_message("assistant"):
-                message_placeholder = st.empty()
-                full_response = ""
-                for response in response_generator:
-                    full_response += response['content']
-                    message_placeholder.markdown(full_response + "▌")
-                message_placeholder.markdown(full_response)
-            st.session_state.messages.append({"role": "assistant", "content": full_response})
+    # Create spinner while response is generating
+    with st.spinner('CoPilot is thinking...'):
+        with st.chat_message("assistant"):
+            message_placeholder = st.empty()
+            full_response = ""
+            for response in response_generator:
+                full_response += response['content']
+                message_placeholder.markdown(full_response + "▌")
+            message_placeholder.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
 
-        # Code to update the progress bar
-        # For the sake of this example, I'm incrementing it by 10% each time and assuming a message cap of 10 messages
-        current_progress = st.progress(st.session_state['message_count'] / 10)
+    # Code to update the progress bar
+    # For the sake of this example, I'm incrementing it by 10% each time and assuming a message cap of 10 messages
+    current_progress = st.progress(st.session_state['message_count'] / 10)
