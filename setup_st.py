@@ -6,7 +6,7 @@ def set_design():
     with col2:
         st.image("sample_logo.png", use_column_width=True) # Load an image in from your files (by uploading it to your github cloned repository) and center it in the middle
 
-    st.markdown("<p style='text-align: center; font-size: 16px;'><b>[Sample Generative AI Chatbot]</b></p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 30px;'><b>[Sample Generative AI Chatbot]</b></p>", unsafe_allow_html=True)
 
 # 2. Initialize session state variables (illustrative list, not complete)
 def initialize_session_state():
@@ -37,9 +37,8 @@ def initialize_session_state():
 
 # 3. Initialize your sidebar
 def sidebar():
-    st.markdown('#') # Adds an empty space
     st.sidebar.markdown("""
-    <h1 style='color: black; font-size: 28px;'>Chatbot Configuration</h1>
+    <h1 style='color: black; font-size: 24px;'>Chatbot Configuration</h1>
     """, unsafe_allow_html=True)
 
 # 4. Setup clear button on the sidebar. Known bug that initial message disappears after first input post-clear
