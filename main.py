@@ -40,9 +40,12 @@ for message in st.session_state.messages:
 
 # Accept user input
 if prompt := st.chat_input("How would you like to reply?"):
+
+    # Append the user's message to the 'messages' list in session state.
+    if prompt != "":
+        st.session_state.messages.append({"role": "user", "content": prompt})
     
     # Add user's message to the chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message(message["role"]):
         st.markdown(prompt)
 
