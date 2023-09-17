@@ -69,7 +69,7 @@ if prompt := st.chat_input("How would you like to reply?"):
                 full_response = ""
                 message_placeholder = st.empty()
 
-                chunks = item["content"].split(' ')
+                chunks = response["content"].split(' ')
                 full_response = ""
                 for i in range(0, len(chunks), 10):
                     chunk = ' '.join(chunks[i:i+10])
