@@ -7,6 +7,9 @@ def generate_response(prompt, history, model_name, temperature):
 
       # Extract the user's initial message from history
       first_message = history[1]['content']
+
+      # Extract the last message sent by the user
+      last_user_message = history[-1]['content']
     
       full_prompt = f"{prompt}\n\
       ### The original message: {first_message}. \n\
@@ -22,7 +25,7 @@ def generate_response(prompt, history, model_name, temperature):
         temperature=temperature,
         messages=[
             {"role": "system", "content": full_prompt},
-            {"role": "user", "content": prompt},
+            {"role": "user", "content": last_user_message},
         ]
       )
       
