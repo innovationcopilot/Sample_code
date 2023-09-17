@@ -22,8 +22,8 @@ def initialize_session_state():
     # Initializes the OpenAI API key variable
     if 'api_key' not in st.session_state:
         st.session_state['api_key'] = ""
-    #if 'directory_path' not in st.session_state:
-        #st.session_state['directory_path'] = ""
+    if 'directory_path' not in st.session_state:
+        st.session_state['directory_path'] = ""
     
     # Can be used to guide the chatbot through pre-defined stages / steps. 
     # Note: you will need to increment the stage in the main.py file every time a response is sent
@@ -106,9 +106,9 @@ def get_user_config():
     st.sidebar.markdown("<b style='color: darkgreen;'>Enter OpenAI API Key to use chatbot:</b>", unsafe_allow_html=True)
     api_key = st.sidebar.text_input("", type="password", label_visibility="collapsed")  # Hides the entered text for privacy
 
-    # Display an input text box to capture user's 'knowledge base' directory so that the chatbot will be able to append information to its responses
-    st.sidebar.markdown("<b style='color: darkgreen;'>Enter OpenAI API Key to use chatbot:</b>", unsafe_allow_html=True)
-    api_key = st.sidebar.text_input("", type="password", label_visibility="collapsed")  # Hides the entered text for privacy
+    # Display a file upload box to capture user's 'knowledge base' directory so that the chatbot will be able to append information to its responses
+    st.sidebar.markdown("<b style='color: darkgreen;'>Upload your knowledge base file:</b>", unsafe_allow_html=True)
+    directory_path = st.sidebar.file_uploader("", type=["pdf"], label_visibility="collapsed")
     
     # Save the values to the Streamlit 'memory' to be used later
     st.session_state['model_name'] = model_options[model_name]
