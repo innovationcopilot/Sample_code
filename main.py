@@ -63,10 +63,22 @@ if prompt := st.chat_input("How would you like to reply?"):
             message_placeholder = st.empty()
             full_response = ""
             for response in response_generated:
-                full_response += response['content']
-                message_placeholder.markdown(full_response + "▌")
+                if full_response:
+                    message_placeholder.markdown(full_response)
+                    st.session_state.messages.append({"role": "assistant", "content": full_message})
+                full_response = ""
+                message_placeholder = st.empty()
+
+                chunks = item["content"].split(' ')
+                full_response = ""
+                for i in range(0, len(chunks), 10):
+                    chunk = ' '.join(chunks[i:i+10])
+                    full_response += chunk + " "  # Add a space at the end of each chunk
+                    message_placeholder.markdown(full_response + "▌")  # Continue streaming current message
+                    time.sleep(0.2)  # Pause for a short time to simulate typing
+
             message_placeholder.markdown(full_response)
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
 
     # Code to update the progress bar
     # For the sake of this example, I'm incrementing it by 10% each time and assuming a message cap of 10 messages
