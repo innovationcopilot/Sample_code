@@ -11,7 +11,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 import requests
 
 # Function for constructing an index out of a knowledge base and appending indexed information to our prompt
-def construct_index(directory_path):
+'''def construct_index(directory_path):
     if os.path.exists('index.json'):
         index = GPTSimpleVectorIndex.load_from_disk('index.json')
         return index
@@ -29,6 +29,32 @@ def construct_index(directory_path):
 
     index.save_to_disk('index.json')
     return index
+    '''
+# Function for constructing an index out of a knowledge base and appending indexed information to our prompt
+def construct_index(directory_path):
+    
+    if directory_path is not None:
+        # Read the uploaded file
+        uploaded_text = directory_path.read().decode('utf-8')
+
+        # Tokenize or otherwise preprocess the uploaded_text as necessary
+        # In your existing code, you could replace this with whatever SimpleDirectoryReader().load_data() does
+        documents = uploaded_text.split('\n')  # For example, if each line of the file is a separate "document"
+    else:
+        return None  # No file uploaded
+
+    max_input_size = 4096
+    num_outputs = 512
+    max_chunk_overlap = 20
+    chunk_size_limit = 600
+
+    prompt_helper = PromptHelper(max_input_size, num_outputs, max_chunk_overlap, chunk_size_limit=chunk_size_limit)
+    llm_predictor = LLMPredictor(llm=ChatOpenAI(temperature=.3, model_name="gpt-3.5-turbo-16k-0613", max_tokens=num_outputs))
+
+    index = GPTSimpleVectorIndex(documents, llm_predictor=llm_predictor, prompt_helper=prompt_helper)
+
+    return index
+
 
 #### Additional functions to consider adding that I used in the Innovatoin CoPilot (implementation left out for simplicity)
 
