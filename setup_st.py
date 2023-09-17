@@ -12,9 +12,6 @@ def set_design():
 
 # 2. Initialize session state variables (illustrative list, not complete)
 def initialize_session_state():
-# Can be used to guide the chatbot through pre-defined stages / steps
-if 'current_stage_index' not in st.session_state:
-    st.session_state['current_stage_index'] = 0
 # Can be used to make the chatbot end the convo or perform an action when some limit is reached
 if 'message_count' not in st.session_state:
     st.session_state['message_count'] = 0
@@ -24,6 +21,11 @@ if 'model_name' not in st.session_state:
 # Initializes the temperature session state variable
 if 'temperature' not in st.session_state:
     st.session_state['temperature'] = []
+
+# Can be used to guide the chatbot through pre-defined stages / steps. 
+# Note: you will need to increment the stage in the main.py file every time a response is sent
+# if 'current_stage_index' not in st.session_state:
+    # st.session_state['current_stage_index'] = 0
 
 # 3. Initialize your sidebar
 def sidebar():
