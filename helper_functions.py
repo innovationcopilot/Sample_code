@@ -25,9 +25,7 @@ def generate_response(prompt, history, model_name, temperature):
         ]
       )
       full_response = ""
-      for response in response:
-            if 'content' in response['choices'][0]['delta']:
-                  full_response += response['choices'][0]['delta']['content']
+      full_response = response['choices'][0]['message']['content']
       yield {"type": "response", "content": full_response}
 
 
