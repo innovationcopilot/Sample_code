@@ -24,8 +24,11 @@ def generate_response(prompt, history, model_name, temperature):
             {"role": "user", "content": prompt},
         ]
       )
-      response = response['choices'][0]['message']['content']
-      return {'content': response}
+      full_response = ""
+      for response in response_generator:
+            if 'content' in response['choices'][0]['delta']:
+                  full_response += response['choices'][0]['delta']['content']
+      yield {"type": "response", "content": full_response}
 
 
 #################################################################################
