@@ -1,6 +1,15 @@
 import os
-from some_library_for_indexing import GPTSimpleVectorIndex, PromptHelper, LLMPredictor, SimpleDirectoryReader, ChatOpenAI
+import openai
+import string
+import json
+from stop_words import get_stop_words
+from nltk.tokenize import word_tokenize
+import nltk
+nltk.download('punkt')
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
+# Function for constructing an index out of a knowledge base and appending indexed information to our prompt
 def construct_index(directory_path):
     if os.path.exists('index.json'):
         index = GPTSimpleVectorIndex.load_from_disk('index.json')
@@ -19,3 +28,42 @@ def construct_index(directory_path):
 
     index.save_to_disk('index.json')
     return index
+
+#### Additional functions to consider adding that I used in the Innovatoin CoPilot (implementation left out for simplicity)
+
+# Function to extract keywords from a text
+def extract_keywords(text):
+    tokens = preprocess(text)
+    freq_dist = nltk.FreqDist(tokens)
+    keywords = [word for word in list(freq_dist.keys()) if word not in excluded_keywords][:10]
+    return keywords
+
+# Function to remove punctuation, tokenize, remove stopwords, and stem
+def preprocess(text):
+    stop_words = get_stop_words('english')
+    tokens = word_tokenize(text)
+    tokens = [word for word in tokens if word not in string.punctuation]
+    tokens = [word.lower() for word in tokens if word.isalpha()]
+    tokens = [word for word in tokens if not word in stop_words]
+    return tokens
+
+# Function to identify relevant articles/information based on context of conversation
+def get_relevant_articles(keywords, articles, num_articles=2):
+    vectorizer = TfidfVectorizer()
+    article_data = [articles[key]["summary"] + ' ' + ' '.join(articles[key]['keywords'].split(', ')) for key in articles.keys()]
+    article_ids = [key for key in articles.keys()]
+
+    # Create vectors for articles and input keywords
+    article_vectors = vectorizer.fit_transform(article_data)
+    keyword_vector = vectorizer.transform([' '.join(keywords)])
+
+    # Compute cosine similarity
+    cosine_similarities = cosine_similarity(keyword_vector, article_vectors).flatten()
+
+    # Get the most similar articles
+    most_similar_articles_indices = cosine_similarities.argsort()[:-num_articles - 1:-1]
+    most_similar_articles = [article_ids[i] for i in most_similar_articles_indices]
+
+
+
+    return {article: articles[article] for article in most_similar_articles}
