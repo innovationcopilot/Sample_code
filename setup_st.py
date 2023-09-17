@@ -1,5 +1,3 @@
-# setup_st.py
-
 import streamlit as st
 
 # 1. Set up the page styling using a column layout
@@ -8,7 +6,7 @@ def set_design():
     with col2:
         st.image("sample_logo.png", use_column_width=True) # Load an image in from your files (by uploading it to your github cloned repository) and center it in the middle
 
-    st.markdown("<p style='text-align: center; font-size: 16px;'><b>[YOUR TITLE HERE]</b></p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 16px;'><b>[Sample Generative AI Chatbot]</b></p>", unsafe_allow_html=True)
 
 # 2. Initialize session state variables (illustrative list, not complete)
 def initialize_session_state():
@@ -21,6 +19,9 @@ def initialize_session_state():
     # Initializes the temperature session state variable
     if 'temperature' not in st.session_state:
         st.session_state['temperature'] = []
+    # Initializes the OpenAI API key variable
+    if 'api_key' not in st.session_state:
+        st.session_state['api_key'] = ""
     
     # Can be used to guide the chatbot through pre-defined stages / steps. 
     # Note: you will need to increment the stage in the main.py file every time a response is sent
@@ -29,20 +30,9 @@ def initialize_session_state():
 
 # 3. Initialize your sidebar
 def sidebar():
-    st.markdown("""
-    <style>
-    [data-testid="stSidebarNav"] { 
-        display: none !important;
-    }
-    </style>
-    """, unsafe_allow_html=True) # Optional HTML which hides the sidebar in your app upon load
-    
     st.markdown('#') # Adds an empty space
-    global logo_placeholder
-    logo_placeholder = st.sidebar.empty() 
-    static_logo()
     st.sidebar.markdown("""
-    <h1 style='color: black; font-size: 28px;'>CoPilot Configuration</h1>
+    <h1 style='color: black; font-size: 28px;'>Chatbot Configuration</h1>
     """, unsafe_allow_html=True)
 
 # 4. Setup clear button on the sidebar. Known bug that initial message disappears after first input post-clear
@@ -108,9 +98,14 @@ def get_user_config():
 
     # Display a slider option for the user to choose 'temperature' or randomness of the chatbot responses. Higher values are recommended for creative chatbots.
     st.sidebar.markdown("<b style='color: darkgreen;'>Choose a temperature (randomness):</b>", unsafe_allow_html=True)
-    temperature = st.sidebar.slider("", min_value=0.1, max_value=1.0, value=0.3, step=0.1, label_visibility="collapsed")
+    temperature = st.sidebar.slider("", min_value=0.1, max_value=1.0, value=0.5, step=0.1, label_visibility="collapsed")
 
-    # Save the user choices to the Streamlit 'memory'. These choices are saved and will affect the chatbot unless changed.
+    # Display an input text box to capture user's OpenAI API key so that the chatbot will be able to generate responses
+    st.sidebar.markdown("<b style='color: darkgreen;'>Enter OpenAI API Key to use chatbot:</b>", unsafe_allow_html=True)
+    api_key = st.sidebar.text_input(type="password"))  # Hides the entered text for privacy
+    
+    # Save the values to the Streamlit 'memory' to be used later
     st.session_state['model_name'] = model_options[model_name]
-    st.session_state['temperature'] = temperature
     st.session_state['mode'] = mode
+    st.session_state['temperature'] = temperature
+    st.session_state['api_key'] = api_key
