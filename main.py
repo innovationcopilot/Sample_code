@@ -27,34 +27,41 @@ get_user_config()
 directory_path = "/path/to/your/documents"  # Replace with your actual directory path
 index = construct_index(directory_path)
 
-# Initialize progress bar and set to 0
-progress_bar = st.progress(0)
-
 # Main chat loop to display messages
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    if message['role'] == 'assistant':
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
+    elif message['role'] == 'user':
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
 # Accept user input
 if prompt := st.chat_input("How would you like to reply?"):
     
     # Add user's message to the chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message(message["role"]):
+        st.markdown(prompt)
+
+    # Increment total message count
+    st.session_state['message_count'] += 1
     
     # Call generate_response function to get chatbot's reply
     # This function is assumed to be defined in your helper_functions.py
-    for generated in generate_response("system prompt here", prompt, st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'], "stage name here", index):
-        chatbot_reply = generated["content"]
+    response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, index, st.session_state['model_name'], st.session_state['temperature']):
+        
+        # Create spinner while response is generating
+        with st.spinner('CoPilot is thinking...'):
+            with st.chat_message("assistant"):
+                message_placeholder = st.empty()
+                full_response = ""
+                for response in response_generator:
+                    full_response += response['content']
+                    message_placeholder.markdown(full_response + "▌")
+                message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
 
-    # Display chatbot's reply
-    with st.chat_message("assistant"):
-        st.markdown(chatbot_reply)
-    
-    # Add chatbot's reply to chat history
-    st.session_state.messages.append({"role": "assistant", "content": chatbot_reply})
-    
-    # Update the progress bar
-    # Here, you can implement your logic to update the progress_bar
-    # For the sake of this example, I'm incrementing it by 10% each time
-    current_progress = progress_bar.progress + 0.1
-    progress_bar.progress(current_progress)
+        # Code to update the progress bar
+        # For the sake of this example, I'm incrementing it by 10% each time and assuming a message cap of 10 messages
+        current_progress = st.progress(st.session_state['message_count'] / 10)
