@@ -10,6 +10,11 @@ def set_design():
 
 # 2. Initialize session state variables (illustrative list, not complete)
 def initialize_session_state():
+    # Used to generate the initial message for the conversation
+    if 'messages' not in st.session_state:
+        st.session_state['messages'] = [
+            {"role": "assistant", "content": "Hi there, what can I help you with today"}
+        ]
     # Can be used to make the chatbot end the convo or perform an action when some limit is reached
     if 'message_count' not in st.session_state:
         st.session_state['message_count'] = 0
