@@ -59,7 +59,7 @@ if prompt := st.chat_input("How would you like to reply?"):
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             full_response = ""
-            for response in response_generator:
+            for response in response_generated:
                 full_response += response['content']
                 message_placeholder.markdown(full_response + "▌")
             message_placeholder.markdown(full_response)
