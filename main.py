@@ -5,9 +5,9 @@ import os
 import time
 
 # Importing custom modules for setup and functionalities
-from setup_st import set_design, initialize_session_state, sidebar, clear_button, download_button, get_user_config
-from helper_functions import generate_response, report_call, generate_validation_report  # Assuming these functions exist in your helper_functions.py
-from index_functions import construct_index
+from setup_st import *
+from helper_functions import generate_response
+from index_functions import *
 
 # Setting up environment variables for OpenAI API key
 os.environ["OPENAI_API_KEY"] = 'your-openai-api-key-here'
@@ -49,7 +49,7 @@ if prompt := st.chat_input("How would you like to reply?"):
     
     # Call generate_response function to get chatbot's reply
     # This function is assumed to be defined in your helper_functions.py
-    response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, index, st.session_state['model_name'], st.session_state['temperature']):
+    response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, index, st.session_state['model_name'], st.session_state['temperature'])
         
         # Create spinner while response is generating
         with st.spinner('CoPilot is thinking...'):
