@@ -16,7 +16,8 @@ def generate_response(prompt, history, model_name, temperature):
       # relevant_info = index.query()
       # full_prompt += f"\n### Relevant data from documents: {relevant_info}"
       
-      response = openai.ChatCompletion.create(
+      # Generate a response using OpenAI API
+      api_response = openai.ChatCompletion.create(
         model=model_name,
         temperature=temperature,
         messages=[
@@ -24,8 +25,9 @@ def generate_response(prompt, history, model_name, temperature):
             {"role": "user", "content": prompt},
         ]
       )
-      full_response = ""
-      full_response = response['choices'][0]['message']['content']
+      
+      full_response = api_response['choices'][0]['message']['content']
+      
       yield {"type": "response", "content": full_response}
 
 
