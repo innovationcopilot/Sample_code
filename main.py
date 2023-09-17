@@ -6,12 +6,6 @@ from setup_st import *
 from helper_functions import generate_response
 from index_functions import *
 
-# Setting up environment variables for OpenAI API key
-if 'api_key' in st.session_state and st.session_state['api_key']:
-    openai.api_key = st.session_state['api_key']
-else:
-    st.sidebar.warning("OpenAI API key not provided. Please enter it in the sidebar.")
-
 # Initialize session state variables if they don't exist
 initialize_session_state()
 
@@ -21,6 +15,12 @@ sidebar()
 get_user_config()
 clear_button()
 download_button()
+
+# Setting up environment variables for OpenAI API key
+if 'api_key' in st.session_state and st.session_state['api_key']:
+    openai.api_key = st.session_state['api_key']
+else:
+    st.sidebar.warning("OpenAI API key not provided. Please enter it in the sidebar.")
 
 # Initialize the knowledge base index
 if 'directory_path' in st.session_state and st.session_state['directory_path']:
