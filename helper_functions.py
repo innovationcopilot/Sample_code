@@ -1,7 +1,7 @@
 import openai
 import streamlit as st
 
-def generate_response(prompt, history, index, model_name, temperature):
+def generate_response(prompt, history, model_name, temperature):
       # Get the last message sent by the chatbot
       chatbot_message = history[-1]['content']
 
