@@ -1,8 +1,5 @@
 # Importing necessary libraries and modules
-import openai
 import streamlit as st
-import os
-import time
 
 # Importing custom modules for setup and functionalities
 from setup_st import *
@@ -10,8 +7,10 @@ from helper_functions import generate_response
 from index_functions import *
 
 # Setting up environment variables for OpenAI API key
-os.environ["OPENAI_API_KEY"] = 'your-openai-api-key-here'
-openai.api_key = os.getenv("OPENAI_API_KEY")
+if 'api_key' in st.session_state and st.session_state['api_key']:
+    openai.api_key = st.session_state['api_key']
+else:
+    st.warning("OpenAI API key not provided. Please enter it in the sidebar.")
 
 # Initialize session state variables if they don't exist
 initialize_session_state()
@@ -19,13 +18,16 @@ initialize_session_state()
 # Setup Streamlit UI/UX elements
 set_design()
 sidebar()
+get_user_config()
 clear_button()
 download_button()
-get_user_config()
 
 # Initialize the knowledge base index
-directory_path = "/path/to/your/documents"  # Replace with your actual directory path
-index = construct_index(directory_path)
+if 'directory_path' in st.session_state and st.session_state['directory_path']:
+    directory_path = st.session_state['directory_path'[
+    index = construct_index(directory_path)
+else:
+    st.warning("Directory path isn't uploaded to serve as chatbot knowledge base. Please upload it in sidebar if you'd like to query information.")
 
 # Main chat loop to display messages
 for message in st.session_state.messages:
