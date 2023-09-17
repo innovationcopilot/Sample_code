@@ -6,7 +6,7 @@ import streamlit as st
 def set_design():
     col1, col2, col3 = st.columns([1, 3, 1])
     with col2:
-        st.image("logo.png", use_column_width=True) # Load an image in from your directly and center it in the middle
+        st.image("sample_logo.png", use_column_width=True) # Load an image in from your files (by uploading it to your github cloned repository) and center it in the middle
 
     st.markdown("<p style='text-align: center; font-size: 16px;'><b>[YOUR TITLE HERE]</b></p>", unsafe_allow_html=True)
 
