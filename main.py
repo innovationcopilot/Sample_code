@@ -51,7 +51,7 @@ if prompt := st.chat_input("How would you like to reply?"):
     
     # Call generate_response function to get chatbot's reply
     # This function is assumed to be defined in your helper_functions.py
-    response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, index, st.session_state['model_name'], st.session_state['temperature'])
+    # response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, index, st.session_state['model_name'], st.session_state['temperature'])
     response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'])
     
     # Create spinner while response is generating
