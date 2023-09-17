@@ -102,7 +102,7 @@ def get_user_config():
 
     # Display an input text box to capture user's OpenAI API key so that the chatbot will be able to generate responses
     st.sidebar.markdown("<b style='color: darkgreen;'>Enter OpenAI API Key to use chatbot:</b>", unsafe_allow_html=True)
-    api_key = st.sidebar.text_input("", type="password", label_visibility="collapsed"))  # Hides the entered text for privacy
+    api_key = st.sidebar.text_input("", type="password", label_visibility="collapsed")  # Hides the entered text for privacy
     
     # Save the values to the Streamlit 'memory' to be used later
     st.session_state['model_name'] = model_options[model_name]
