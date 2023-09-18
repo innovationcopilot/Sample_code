@@ -1,0 +1,230 @@
+From Zero To GenAI Chatbot hero: Step-by-Step guide and best practices for building advanced chatbots
+TL;DR
+Over the last 2 months, I embarked on a journey to build a GenAI chatbot for Innovation. I learned a lot and share my learnings below.
+No deep technical knowledge is required. This guide is designed to help anyone build a unique, advanced, chatbot in just a few hours.
+This article covers optimal tech stack, key definitions, comprehensive code snippets, advanced functionalities, and many learnings/tips
+TEMPLATE: A sample chatbot code repository can be found here
+Streamlit is used for the UI/UX, OpenAI is used for chat completions, and various other libraries to support additional functionalities
+My goal is to encourage you to bring your AI ideas to life - it's truly never been easier than today
+
+Table of contents 
+· Introduction
+· What I built and why I'm sharing it
+· Creating a Basic Chatbot: step by step
+  ∘ Part 1: Setting up your environment
+  ∘ Part 2: Setting up necessary accounts
+  ∘ Part 3: Creating the most basic chatbot
+· Advanced Chatbot Features
+· Other functionalities to consider adding
+· Final thoughts and recommendations/tips
+· Valuable links and references to learn more
+· Key Concepts for Understanding Chatbots
+· Recommended Chatbot Tech Stack
+Introduction
+Since wrapping up my CS minor from university a few years back, I can count on one hand the number of times I've written code for fun. Despite that, I recently tackled one of the most rewarding challenges of my career so far: developing the 'Innovation CoPilot' chatbot. This project not only revitalized my rusty coding skills, but also deepened my understanding and appreciation of the exciting and rapidly growing GenAI space. This article is my attempt to distill these learnings into a step-by-step guide, so you can build your own GenAI chatbot quicker and with fewer roadblocks.
+What I built and why I'm sharing it
+During the work week, I'm an associate at The Boston Consulting Group and work as a generalist, meaning I get to try my hand at a variety of projects across industries and functional areas - not many of which involve coding. A few months ago, an opportunity came up to help demonstrate the value of GenAI in innovation at BCG - by developing the Innovation CoPilot chatbot. 
+With rusty coding skills, a bit of uncertainty, and a supportive leadership team, I jumped at the opportunity to build the chatbot. 
+The final product is the 'Idea Challenger', a customizable, fine-tuned GenAI chatbot capable of refining ideas and pressure-testing them against BCG's tried-and-tested idea validation frameworks. 
+It's well known that ChatGPT (and other LLMs) can help with ideation, and there are powerful tools out there that help with exactly this already (like the MIT Ideator).
+However, existing implementations center around idea generation, rather than idea validation or refinement. Ideas are, of course, a dime a dozen - it's the quality of the idea that really matters. 
+With this in mind,  the goal became to develop a tool that doesn't just offer users a bunch of ideas, but instead iteratively refines the ideas that have the most scale-up potential to be a valuable product/business.
+With a combination of 1) Rigorous idea validation frameworks, 2) extensive prompt engineering, and 3) extensive testing, the CoPilot is able to do just that - all in a conversational and enjoyable experience.
+After starting from near-zero knowledge and reading through dozens of articles, documentations, and tweets, I finally found myself relatively comfortable with the technologies discussed in this article. Just a few weeks later, the underlying technology makes a lot more sense and I've gained a newfound appreciation and excitement for what's possible with just a bit of tinkering. 
+My goal is to help empower you in a similar way, regardless of your technical background, and help you take full advantage of the exciting new technological era we're approaching. 
+Creating a Basic Chatbot: step by step
+Part 1: Setting up your environment
+The following steps assume that you're a beginner at creating chatbots and developing, and will guide you through the basic setup process.
+Install Visual Studio Code (VS Code) - A free code editor made by Microsoft which I use to write and run the code for the chatbot. Feel free to use another code editor that you prefer. Video tutorial. 
+Install Python -If you don't already have Python installed on your computer, it's quite easy to get started. This will be vital for building out the necessary functionality for our chatbot. Video tutorial.
+Build out the folder structure for our chatbot - To follow coding best practices, it's recommended to create separate files for the various components of our chatbot. In VS Code, create separate files called:
+- main.py - This is where the main body of our chatbot code will sit
+- setup_st.py - This is where we'll set up our chatbot UI/UX
+- requirements.txt - This is where we'll install the necessary Python libraries for our implementation
+- helper_functions.py - This is where we'll store both vital functions and complex functions for our chatbot
+- index_functions.py - This is where we'll store functions related to our knowledge base, indexing, and vectorizing. These are complex functionalities and are not necessary for a basic chatbot.
+Install necessary libraries in VS code by adding the following lines to the requirements.txt file and saving it. 
+streamlit
+openai
+langchain
+nltk
+scikit-learn
+Then, open a new terminal in VS Code (Terminal > New Terminal) and navigate to the folder in which the requirements.txt file is stored. 
+Run the following command in your terminal to install these libraries.
+pip install -r requirements.txt
+Voila! Now after creating the necessary accounts, we'll dive into the fun stuff - building out the chatbot.
+
+Part 2: Setting up necessary accounts
+Create an OpenAI account if you don't have one yet by visiting https://beta.openai.com/signup/. Once you log in, you can create an API key by: 
+1) Clicking your profile in the top right
+2) View API keys
+3) Create new secret key. Be sure to save this key somewhere safe as you'll need it later and it can't be accessed again.
+Create a Streamlit cloud account if you don't have one by visiting https://streamlit.io/cloud and signing up with GitHub, Google or email. You don't need to do anything else with this account for the moment.
+
+Part 3: Creating the most basic chatbot
+Open the main.py and add the following code:
+
+# 1. Importing necessary libraries
+import streamlit as st  # Import the Streamlit library
+import random  # Import the random library
+import time  # Import the time library
+
+# 2. Creating a title for our streamlit web application
+st.title("Simple chat")  # Set the title of the web application
+
+# 3. Initializing the chat history in the session state (how our chatbot tracks things)
+if "messages" not in st.session_state:  # Check if "messages" exists in session state
+    st.session_state.messages = []  # Initialize "messages" as an empty list
+
+# 4. Displaying the existing chat messages from the user and the chatbot
+for message in st.session_state.messages:  # For every message in the chat history
+    with st.chat_message(message["role"]):  # Create a chat message box
+        st.markdown(message["content"])  # Display the content of the message
+
+# 5. Accepting the user input and adding it to the message history
+if prompt := st.chat_input("What is up?"):  # If user enters a message
+    with st.chat_message("user"):  # Display user's message in a chat message box
+        st.markdown(prompt)  # Display the user's message
+    st.session_state.messages.append({"role": "user", "content": prompt})  # Add user's message to chat history
+
+# 6. Generating and displaying the assistant's response
+with st.chat_message("assistant"):  # Create a chat message box for the assistant's response
+    message_placeholder = st.empty()  # Create an empty placeholder for the assistant's message
+    full_response = ""  # Initialize an empty string for the full response
+    assistant_response = random.choice([
+        "Hello there! How can I assist you today?",
+        "Hi, human! Is there anything I can help you with?",
+        "Do you need help?"
+    ])  # Select assistant's response randomly
+
+    # Simulate "typing" effect by gradually revealing the response
+    for chunk in assistant_response.split():  # For each word in the response
+        full_response += chunk + " "
+        time.sleep(0.05)  # Small delay between each word
+        message_placeholder.markdown(full_response + "▌")  # Update placeholder with current full response and a blinking cursor
+
+    message_placeholder.markdown(full_response)  # Remove cursor and display full response
+    st.session_state.messages.append({"role": "assistant", "content": full_response})  # Add assistant's response to chat history
+This implementation is taken directly from Streamlits documentation here and is far from the final product that we'll get to. However, this simple code with comments is a great way to understand how our chatbot (and chatbots in general) function at their core.
+Running this chatbot - To give this simple chatbot a go
+1) Navigate to your terminal (try searching CMD in Windows search)
+2) Navigate to your folder directory
+3) Type streamlit main.py run and press enter. 
+A locally hosted version of your chatbot should load and you can play around with it.
+Actual output from the Innovation Pilot; includes many advanced featuresAdvanced Chatbot Features
+Now that we understand how a basic streamlit chatbot works at the core, let's take a look at how we can build one with the following functionalities. 
+NOTE: For a completed GenAI chatbot template which incorporates and packages up these features and more, check out my repository here.
+Incorporate OpenAI/LLM responses. Instead of the random phrases from above, looping in an LLM like OpenAI will allow us to summarize, criticize, converse, and all of the other magic you've seen ChatGPT do.
+
+def generate_response(prompt, history, model_name, temperature):
+      # Get the last message sent by the chatbot
+      chatbot_message = history[-1]['content']
+
+      # Extract the user's initial message from history
+      first_message = history[1]['content']
+
+      # Extract the last message sent by the user
+      last_user_message = history[-1]['content']
+    
+      # Now, we're creating a 'full_prompt'. Think of this as the complete message we send to the chatbot, giving it all the context it needs to understand our request.
+      # The '\n\' line breaks and the '###' help to structure our prompt in a more understandable format for an LLM.
+      full_prompt = f"{prompt}\n\
+      ### The original message: {first_message}. \n\
+      ### Your latest message to me: {chatbot_message}. \n\
+      ### Previous conversation history for context: {history}"
+      
+      # relevant_info = index.query()
+      # full_prompt += f"\n### Relevant data from documents: {relevant_info}"
+      
+      # Generate a response using OpenAI API
+      api_response = openai.ChatCompletion.create(
+        model=model_name, # Specifying which model to use. This can be hardcoded or passed as a user value depending on your use case.
+        temperature=temperature,
+        messages=[
+            {"role": "system", "content": full_prompt},
+            {"role": "user", "content": last_user_message},
+        ]
+      )
+      
+      # Then we add this part of the response to our 'full_response' placeholder.
+      full_response = api_response['choices'][0]['message']['content']
+
+      # After getting the chatbots full response, we package it in a specific format and present it as the final result of this function.
+      yield {"type": "response", "content": full_response}
+Create your setup_st.py file. This will enable us to adjust the page design, the sidebar, and the session_state variables. The session state variables allow us to create more dynamic and flexible conversations tailored to our use case by tracking variables, messages and other aspects of our conversation.
+
+# Example of a setup_st.py file which is called in your main file to setup the UI/UX and initialize the session
+
+# 1. Set up the page styling using a column layout
+def set_design():
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.image("sample_logo.png", use_column_width=True) # Load an image in from your files (by uploading it to your github cloned repository) and centering it in the middle
+
+    st.markdown("<p style='text-align: center; font-size: 30px;'><b>[Sample Generative AI Chatbot]</b></p>", unsafe_allow_html=True)
+
+# 2. Initialize session state variables (illustrative list, not complete)
+def initialize_session_state():
+    # Used to generate the initial message for the conversation
+    if 'messages' not in st.session_state:
+        st.session_state['messages'] = [
+            {"role": "assistant", "content": "Hi there, what can I help you with today"}
+        ]
+    # Can be used to make the chatbot end the convo or perform an action when some limit is reached
+    if 'message_count' not in st.session_state:
+        st.session_state['message_count'] = 0
+    # Initializes the model_name session state variable
+    if 'model_name' not in st.session_state:
+        st.session_state['model_name'] = ""
+    # Initializes the temperature session state variable
+    if 'temperature' not in st.session_state:
+        st.session_state['temperature'] = []
+    # Initializes the OpenAI API key variable
+    if 'api_key' not in st.session_state:
+        st.session_state['api_key'] = ""
+    if 'directory_path' not in st.session_state:
+        st.session_state['directory_path'] = ""
+
+# 3. Initialize your sidebar
+def sidebar():
+    st.sidebar.markdown("""
+    <h1 style='color: black; font-size: 24px;'>Chatbot Configuration</h1>
+    """, unsafe_allow_html=True)
+
+# 4. Setup clear button on the sidebar. Known bug that initial message disappears after first input post-clear
+def clear_button():
+    clear_button = st.sidebar.button("Clear Conversation", key="clear")
+    # Clear the conversation
+    if clear_button:
+        st.session_state['history'] = []
+        st.session_state['messages'] = [
+            {"role": "assistant", "content": "Hi there, what can I help you with today"}
+        ]
+        with st.chat_message("assistant"):
+            st.markdown(st.session_state['messages'][0]['content'])
+        st.session_state['message_count'] = 0
+
+# 5. Setup download_convo function to track the conversation for download functionality
+def download_convo():
+    if 'messages' in st.session_state and len(st.session_state['messages']) > 0:
+        full_conversation = "\n".join([
+            f"\n{'-'*20}\n"
+            f"Role: {msg['role']}\n"
+            f"{'-'*20}\n"
+            f"{msg['content']}\n"
+            for msg in st.session_state['messages']
+        ])
+        return full_conversation
+    else:
+        st.warning("There aren't enough messages in the conversation to download it. Please refresh the page")
+        return ""
+
+# 6. Setup download button
+def download_button():
+    full_conversation = download_convo()  # Get the full_conversation string
+    st.sidebar.download_button(
+        label="Download conversation",
+        data=full_conversation,
+        file_name='conversation.txt',
+        mime='text/plain'
+    )
