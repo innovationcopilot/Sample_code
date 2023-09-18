@@ -1,0 +1,9 @@
+# This file configures the overall theme of the Chatbot; Changing values here will immediately reflect in the Streamlit cloud hosted version
+
+[theme]
+base="light"
+primaryColor="#147c5c"
+backgroundColor="#FFFFFF"
+secondaryBackgroundColor="#f0f0f0"
+textColor="#585858"
+font="sans serif"
