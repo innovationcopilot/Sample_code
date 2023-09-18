@@ -54,7 +54,7 @@ def generate_response_index(prompt, history, model_name, temperature, index=None
       
       index_response = ""
       # If an index exists, query the chat engine
-      if index:
+      if st.session_state['use_index']:
             response = chat_engine.chat(last_user_message)  # This assumes you've already set up your chat_engine based on the index
             index_response = response.response
             full_prompt += f"\n### Relevant data from documents: {index_response}"
