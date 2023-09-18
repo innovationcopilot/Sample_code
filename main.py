@@ -22,15 +22,6 @@ if 'api_key' in st.session_state and st.session_state['api_key']:
 else:
     st.sidebar.warning("OpenAI API key not provided. Please enter it in the sidebar.")
 
-# Initialize the knowledge base index
-'''
-if 'directory_path' in st.session_state and st.session_state['directory_path']:
-    directory_path = st.session_state['directory_path']
-    index = construct_index(directory_path)
-else:
-    st.sidebar.warning("Directory path isn't uploaded to serve as chatbot knowledge base. Please upload it in sidebar if you'd like to query information.")
-    '''
-
 # Main chat loop to display messages
 for message in st.session_state.messages:
     if message['role'] == 'assistant':
@@ -54,13 +45,23 @@ if prompt := st.chat_input("How would you like to reply?"):
     # Increment total message count
     st.session_state['message_count'] += 1
     
-    # Call generate_response_index function to get chatbot's reply based on the index, only if index exists
-    if st.session_state['use_index']:
+    # Call either generate_response or generate_response_index based on st.session_state['use_index']
+    if st.session_state.get('use_index', False):
         chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
-        response_generated_index = generate_response_index("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'], chat_engine)
+        response_generated = generate_response_index(
+            "You are an expert consultant who is great at assisting users with whatever query they have",
+            st.session_state.messages,
+            st.session_state['model_name'],
+            st.session_state['temperature'],
+            chat_engine
+        )
     else:
-        # Call generate_response function to get chatbot's reply if there's no index
-        response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'])
+        response_generated = generate_response(
+            "You are an expert consultant who is great at assisting users with whatever query they have",
+            st.session_state.messages,
+            st.session_state['model_name'],
+            st.session_state['temperature']
+        )
     
     # Create spinner to indicate to the user that the assistant is generating a response
     with st.spinner('CoPilot is thinking...'):
