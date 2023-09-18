@@ -30,12 +30,6 @@ if 'directory_path' in st.session_state and st.session_state['directory_path']:
 else:
     st.sidebar.warning("Directory path isn't uploaded to serve as chatbot knowledge base. Please upload it in sidebar if you'd like to query information.")
     '''
-# Initialize the index
-index = load_data()
-
-# Check if index is None and display a warning if it is
-if index is None:
-    st.warning("No index could be loaded. Chatbot will proceed without querying additional context from documents.")
 
 # Main chat loop to display messages
 for message in st.session_state.messages:
@@ -60,12 +54,13 @@ if prompt := st.chat_input("How would you like to reply?"):
     # Increment total message count
     st.session_state['message_count'] += 1
     
-    # Call generate_response function to get chatbot's primary reply
-    response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'])
-    
     # Call generate_response_index function to get chatbot's reply based on the index, only if index exists
-    if index:
-        response_generated_index = generate_response_index("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'], index)
+    if st.session_state['use_index']:
+        chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
+        response_generated_index = generate_response_index("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'], chat_engine)
+    else:
+        # Call generate_response function to get chatbot's reply if there's no index
+        response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'])
     
     # Create spinner to indicate to the user that the assistant is generating a response
     with st.spinner('CoPilot is thinking...'):
