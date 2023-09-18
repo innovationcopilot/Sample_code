@@ -29,7 +29,7 @@ def initialize_session_state():
         st.session_state['api_key'] = ""
     # Initializes the use index variable to determine if we use index in replies
     if 'use_index' not in st.session_state:
-        st.session_state['use_index'] = False
+        st.session_state['use_index'] = True
     
     # Can be used to guide the chatbot through pre-defined stages / steps. 
     # Note: you will need to increment the stage in the main.py file every time a response is sent
