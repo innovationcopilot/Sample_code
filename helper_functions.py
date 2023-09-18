@@ -1,6 +1,7 @@
 import openai
 import streamlit as st
 from index_functions import load_data
+import langchain
 from llama_index import VectorStoreIndex, ServiceContext, Document
 from llama_index.llms import OpenAI
 from llama_index import SimpleDirectoryReader
