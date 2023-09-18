@@ -42,23 +42,15 @@ def sidebar():
     <h1 style='color: black; font-size: 24px;'>Chatbot Configuration</h1>
     """, unsafe_allow_html=True)
 
-# 4. Setup clear button on the sidebar. Known bug that initial message disappears after first input post-clear
+# 4. Setup clear button on the sidebar. Clears the conversation and adds an initial message.
 def clear_button():
     clear_button = st.sidebar.button("Clear Conversation", key="clear")
     # Clear the conversation
     if clear_button:
-        # Clear the conversation
-        st.session_state['history'] = []
-        st.session_state['initial_message'] = get_initial_message()
         st.session_state['messages'] = [
-            {"role": "system", "content": st.session_state['initial_message']}
+            {"role": "assistant", "content": "Hi there, what can I help you with today?"}
         ]
-        with st.chat_message("assistant", avatar=bruce) as chat:
-            st.markdown(st.session_state['initial_message'])
-        st.session_state['current_stage_index'] = 0
         st.session_state['message_count'] = 0
-        st.session_state['messages_per_stage'] = {stage: 0 for stage in stages}
-        st.session_state['completed'] = False
 
 # 5. Setup download_convo function to track the conversation for download functionality
 def download_convo():
