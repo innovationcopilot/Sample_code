@@ -41,6 +41,7 @@ if prompt := st.chat_input("How would you like to reply?"):
     
     # Call either generate_response or generate_response_index based on st.session_state['use_index']
     if st.session_state.get('use_index', False):
+        index = load_data()
         chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
         response_generated = generate_response_index(
             "You are an expert consultant who is great at assisting users with whatever query they have",
