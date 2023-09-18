@@ -1,5 +1,6 @@
 # Importing necessary libraries
 import streamlit as st
+import time
 
 # Importing other files for setup and functionalities
 from setup_st import *
