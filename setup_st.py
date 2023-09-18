@@ -99,9 +99,6 @@ def get_user_config():
     # Create the radio button. Label is hidden (since we have HTMl label), it defaults to the first option (turbo 16k) of the model_options above.
     model_name = st.sidebar.radio("", list(model_options.keys()), index=0, label_visibility="collapsed") 
 
-    # Display button choices for the user to pick a validation mode. My implementation of this function changes the 'rigor' of the idea validation.
-    st.sidebar.markdown("<b style='color: darkgreen;'>Choose a validation mode:</b>", unsafe_allow_html=True)
-    mode = st.sidebar.radio("", ("Standard", "Tough", "Easy"), index=0, label_visibility="collapsed")
 
     # Display a slider option for the user to choose 'temperature' or randomness of the chatbot responses. Higher values are recommended for creative chatbots.
     st.sidebar.markdown("<b style='color: darkgreen;'>Choose a temperature (randomness):</b>", unsafe_allow_html=True)
@@ -114,10 +111,14 @@ def get_user_config():
     # Display a file upload box to capture user's 'knowledge base' directory so that the chatbot will be able to append information to its responses
     st.sidebar.markdown("<b style='color: darkgreen;'>Use Indexed Data for Responses:</b>", unsafe_allow_html=True)
     use_index = st.sidebar.checkbox("", value=True, label_visibility="collapsed")
+
+    # OPTIONAL: Display button choices for the user to pick a validation mode. My implementation of this function changes the 'rigor' of the idea validation.
+    # st.sidebar.markdown("<b style='color: darkgreen;'>Choose a validation mode:</b>", unsafe_allow_html=True)
+    # mode = st.sidebar.radio("", ("Standard", "Tough", "Easy"), index=0, label_visibility="collapsed")
+    # st.session_state['mode'] = mode
     
     # Save the values to the Streamlit 'memory' to be used later
     st.session_state['model_name'] = model_options[model_name]
-    st.session_state['mode'] = mode
     st.session_state['temperature'] = temperature
     st.session_state['api_key'] = api_key
     st.session_state['use_index'] = use_index
