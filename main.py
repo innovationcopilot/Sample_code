@@ -22,6 +22,7 @@ if 'api_key' in st.session_state and st.session_state['api_key']:
 else:
     st.sidebar.warning("OpenAI API key not provided. Please enter it in the sidebar.")
 
+'''
 # Main chat loop to display messages
 for message in st.session_state.messages:
     if message['role'] == 'assistant':
@@ -30,24 +31,26 @@ for message in st.session_state.messages:
     elif message['role'] == 'user':
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
+'''
+# 4. Displaying the existing chat messages from the user and the chatbot
+for message in st.session_state.messages:  # For every message in the chat history
+    with st.chat_message(message["role"]):  # Create a chat message box
+        st.markdown(message["content"])  # Display the content of the message
 
 # Accept user input and generate response
 if prompt := st.chat_input("How would you like to reply?"):
-
-    # Append the user's message to the 'messages' list in session state.
-    if prompt != "":
-        st.session_state.messages.append({"role": "user", "content": prompt})
     
     # Add user's message to the chat history
-    with st.chat_message(message["role"]):
-        st.markdown(prompt)
+    if prompt != "":
+        with st.chat_message("user"):
+            st.markdown(prompt)
+        st.session_state.messages.append({"role": "user", "content": prompt}) # Add user's message to chat history
 
     # Increment total message count
     st.session_state['message_count'] += 1
     
     # Call either generate_response or generate_response_index based on st.session_state['use_index']
     if st.session_state.get('use_index', False):
-        index = load_data()
         chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
         response_generated = generate_response_index(
             "You are an expert consultant who is great at assisting users with whatever query they have",
