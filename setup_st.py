@@ -29,7 +29,7 @@ def initialize_session_state():
         st.session_state['api_key'] = ""
     # Initializes the use index variable to determine if we use index in replies
     if 'use_index' not in st.session_state:
-        st.session_state['use_index'] = True
+        st.session_state['use_index'] = False
     
     # Can be used to guide the chatbot through pre-defined stages / steps. 
     # Note: you will need to increment the stage in the main.py file every time a response is sent
@@ -101,7 +101,7 @@ def get_user_config():
     api_key = st.sidebar.text_input("", type="password", label_visibility="collapsed")  # Hides the entered text for privacy
 
     # Display a file upload box to capture user's 'knowledge base' directory so that the chatbot will be able to append information to its responses
-    st.sidebar.markdown("<b style='color: darkgreen;'>Use Indexed Data for Responses:</b>", unsafe_allow_html=True)
+    st.sidebar.markdown("<b style='color: darkgreen;'>Use indexed data for responses:</b>", unsafe_allow_html=True)
     use_index = st.sidebar.checkbox("", value=True, label_visibility="collapsed")
 
     # OPTIONAL: Display button choices for the user to pick a validation mode. My implementation of this function changes the 'rigor' of the idea validation.
