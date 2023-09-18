@@ -38,7 +38,7 @@ def generate_response(prompt, history, model_name, temperature):
       yield {"type": "response", "content": full_response}
 
 # Secondary function used to generate responses using OpenAI API chat completions; DOES include indexed data
-def generate_response_index(prompt, history, model_name, temperature, index=None):
+def generate_response_index(prompt, history, model_name, temperature, chat_engine):
       # Get the last message sent by the chatbot
       chatbot_message = history[-1]['content']
 
@@ -53,8 +53,6 @@ def generate_response_index(prompt, history, model_name, temperature, index=None
       ### The original message: {first_message}. \n\
       ### Your latest message to me: {chatbot_message}. \n\
       ### Previous conversation history for context: {history}"
-
-      chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
       
       index_response = ""
       # If an index exists, query the chat engine
