@@ -12,3 +12,4 @@ Pillow
 scikit-learn
 streamlit-extras
 requests
+llama-index
