@@ -10,6 +10,12 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import requests
 
+import streamlit as st
+from llama_index import VectorStoreIndex, ServiceContext, Document
+from llama_index.llms import OpenAI
+import openai
+from llama_index import SimpleDirectoryReader
+
 # Function for constructing an index out of a knowledge base and appending indexed information to our prompt
 '''def construct_index(directory_path):
     if os.path.exists('index.json'):
@@ -30,6 +36,7 @@ import requests
     index.save_to_disk('index.json')
     return index
     '''
+'''
 # Function for constructing an index out of a knowledge base and appending indexed information to our prompt
 def construct_index(directory_path):
     
@@ -54,9 +61,19 @@ def construct_index(directory_path):
     index = GPTSimpleVectorIndex(documents, llm_predictor=llm_predictor, prompt_helper=prompt_helper)
 
     return index
+'''
+@st.cache_resource(show_spinner=False)
+def load_data():
+    with st.spinner(text="Loading and indexing the Streamlit docs – hang tight! This should take 1-2 minutes."):
+        reader = SimpleDirectoryReader(input_dir="./data", recursive=True)
+        docs = reader.load_data()
+        service_context = ServiceContext.from_defaults(llm=OpenAI(model="gpt-3.5-turbo", temperature=0.5, system_prompt="You are an expert on the Streamlit Python library and your job is to answer technical questions. Assume that all questions are related to the Streamlit Python library. Keep your answers technical and based on facts – do not hallucinate features."))
+        index = VectorStoreIndex.from_documents(docs, service_context=service_context)
+        return index
 
+index = load_data()
 
-#### Additional functions to consider adding that I used in the Innovatoin CoPilot (implementation left out for simplicity)
+#### Additional functions to consider adding that I used in the Innovation CoPilot
 
 # Function to extract keywords from a text
 def extract_keywords(text):
