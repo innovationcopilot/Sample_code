@@ -33,7 +33,6 @@ def generate_response(prompt, history, model_name, temperature):
       
       yield {"type": "response", "content": full_response}
 
-
 #################################################################################
 # Additional, specific functions I had in the Innovation CoPilot for inspiration:
 
@@ -64,7 +63,7 @@ def generate_summary(model_name, temperature, summary_prompt):
     print(f"summary: {summary}, model name: {model_name}, temperature: {temperature})")
     return summary
 
-# Function used to enable 'summary' mode in wihch the CoPilot only response with bullet points rather than paragraphs
+# Function used to enable 'summary' mode in which the CoPilot only responds with bullet points rather than paragraphs
 def transform_bullets(content):
     try:
         prompt = f"Summarize the following content in 3 brief bullet points while retaining the structure and conversational tone (using wording like 'you' and 'your idea'):\n{content}"
@@ -92,6 +91,6 @@ def grade_response(user_input, assistant_message, idea):
       return      
 
 # Function used to generate a final 'report' at the end of the conversation, summarizing the convo and providing a final recomendation
-def generate_validation_report():
+def generate_final_report():
       #Implementation dependent on your chatbots context
       return
