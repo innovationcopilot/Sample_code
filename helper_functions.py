@@ -19,9 +19,6 @@ def generate_response(prompt, history, model_name, temperature):
       ### Your latest message to me: {chatbot_message}. \n\
       ### Previous conversation history for context: {history}"
       
-      # relevant_info = index.query()
-      # full_prompt += f"\n### Relevant data from documents: {relevant_info}"
-      
       # Generate a response using OpenAI API
       api_response = openai.ChatCompletion.create(
         model=model_name,
@@ -37,7 +34,7 @@ def generate_response(prompt, history, model_name, temperature):
       yield {"type": "response", "content": full_response}
 
 # Secondary function used to generate responses using OpenAI API chat completions; DOES include indexed data
-def generate_response_index(prompt, history, model_name, temperature, index):
+def generate_response_index(prompt, history, model_name, temperature, index=None):
       # Get the last message sent by the chatbot
       chatbot_message = history[-1]['content']
 
@@ -53,10 +50,14 @@ def generate_response_index(prompt, history, model_name, temperature, index):
       ### Your latest message to me: {chatbot_message}. \n\
       ### Previous conversation history for context: {history}"
 
-      # Query index for additional context if available
+      chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
+      
+      index_response = ""
+      # If an index exists, query the chat engine
       if index:
-        relevant_info = index.query(last_user_message)
-        full_prompt += f"\n### Relevant data from documents: {relevant_info}"
+            response = chat_engine.chat(last_user_message)  # This assumes you've already set up your chat_engine based on the index
+            index_response = response.response
+            full_prompt += f"\n### Relevant data from documents: {index_response}"
       
       # Generate a response using OpenAI API
       api_response = openai.ChatCompletion.create(
