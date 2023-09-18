@@ -1,19 +1,19 @@
 import os
+import json
+import nltk
 import openai
 import string
-import json
+import requests
+import streamlit as st
+nltk.download('punkt')
 from stop_words import get_stop_words
 from nltk.tokenize import word_tokenize
-import nltk
-nltk.download('punkt')
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import requests
-
-import streamlit as st
+from sklearn.feature_extraction.text import TfidfVectorizer
 from llama_index import VectorStoreIndex, ServiceContext, Document
 from llama_index.llms import OpenAI
 from llama_index import SimpleDirectoryReader
+
 
 # Function for constructing an index out of a knowledge base and appending indexed information to our prompt
 '''def construct_index(directory_path):
