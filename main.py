@@ -22,16 +22,6 @@ if 'api_key' in st.session_state and st.session_state['api_key']:
 else:
     st.sidebar.warning("OpenAI API key not provided. Please enter it in the sidebar.")
 
-'''
-# Main chat loop to display messages
-for message in st.session_state.messages:
-    if message['role'] == 'assistant':
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-    elif message['role'] == 'user':
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-'''
 # 4. Displaying the existing chat messages from the user and the chatbot
 for message in st.session_state.messages:  # For every message in the chat history
     with st.chat_message(message["role"]):  # Create a chat message box
