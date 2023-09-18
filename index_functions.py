@@ -5,6 +5,7 @@ import openai
 import string
 import requests
 import streamlit as st
+import langchain
 nltk.download('punkt')
 from stop_words import get_stop_words
 from nltk.tokenize import word_tokenize
