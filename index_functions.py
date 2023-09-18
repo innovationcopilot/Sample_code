@@ -13,7 +13,6 @@ import requests
 import streamlit as st
 from llama_index import VectorStoreIndex, ServiceContext, Document
 from llama_index.llms import OpenAI
-import openai
 from llama_index import SimpleDirectoryReader
 
 # Function for constructing an index out of a knowledge base and appending indexed information to our prompt
