@@ -1,6 +1,8 @@
 import openai
 import streamlit as st
+from index_functions import load_data
 
+# Main function used to generate responses using OpenAI API chat completions; Does NOT include indexed data
 def generate_response(prompt, history, model_name, temperature):
       # Get the last message sent by the chatbot
       chatbot_message = history[-1]['content']
@@ -10,7 +12,8 @@ def generate_response(prompt, history, model_name, temperature):
 
       # Extract the last message sent by the user
       last_user_message = history[-1]['content']
-    
+
+      # Constructing the full prompt which will be fed to OpenAI
       full_prompt = f"{prompt}\n\
       ### The original message: {first_message}. \n\
       ### Your latest message to me: {chatbot_message}. \n\
@@ -18,6 +21,42 @@ def generate_response(prompt, history, model_name, temperature):
       
       # relevant_info = index.query()
       # full_prompt += f"\n### Relevant data from documents: {relevant_info}"
+      
+      # Generate a response using OpenAI API
+      api_response = openai.ChatCompletion.create(
+        model=model_name,
+        temperature=temperature,
+        messages=[
+            {"role": "system", "content": full_prompt},
+            {"role": "user", "content": last_user_message},
+        ]
+      )
+      
+      full_response = api_response['choices'][0]['message']['content']
+      
+      yield {"type": "response", "content": full_response}
+
+# Secondary function used to generate responses using OpenAI API chat completions; DOES include indexed data
+def generate_response_index(prompt, history, model_name, temperature, index):
+      # Get the last message sent by the chatbot
+      chatbot_message = history[-1]['content']
+
+      # Extract the user's initial message from history
+      first_message = history[1]['content']
+
+      # Extract the last message sent by the user
+      last_user_message = history[-1]['content']
+
+      # Constructing the full prompt which will be fed to OpenAI
+      full_prompt = f"{prompt}\n\
+      ### The original message: {first_message}. \n\
+      ### Your latest message to me: {chatbot_message}. \n\
+      ### Previous conversation history for context: {history}"
+
+      # Query index for additional context if available
+      if index:
+        relevant_info = index.query(last_user_message)
+        full_prompt += f"\n### Relevant data from documents: {relevant_info}"
       
       # Generate a response using OpenAI API
       api_response = openai.ChatCompletion.create(
