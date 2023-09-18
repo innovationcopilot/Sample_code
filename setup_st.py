@@ -29,7 +29,7 @@ def initialize_session_state():
         st.session_state['api_key'] = ""
     # Initializes the use index variable to determine if we use index in replies
     if 'use_index' not in st.session_state:
-        st.session_state['use_index'] = True
+        st.session_state['use_index'] = False
     
     # Can be used to guide the chatbot through pre-defined stages / steps. 
     # Note: you will need to increment the stage in the main.py file every time a response is sent
@@ -91,7 +91,6 @@ def get_user_config():
     # Create the radio button. Label is hidden (since we have HTMl label), it defaults to the first option (turbo 16k) of the model_options above.
     model_name = st.sidebar.radio("", list(model_options.keys()), index=0, label_visibility="collapsed") 
 
-
     # Display a slider option for the user to choose 'temperature' or randomness of the chatbot responses. Higher values are recommended for creative chatbots.
     st.sidebar.markdown("<b style='color: darkgreen;'>Choose a temperature (randomness):</b>", unsafe_allow_html=True)
     temperature = st.sidebar.slider("", min_value=0.1, max_value=1.0, value=0.5, step=0.1, label_visibility="collapsed")
@@ -102,7 +101,7 @@ def get_user_config():
 
     # Display a file upload box to capture user's 'knowledge base' directory so that the chatbot will be able to append information to its responses
     st.sidebar.markdown("<b style='color: darkgreen;'>Use indexed data for responses:</b>", unsafe_allow_html=True)
-    use_index = st.sidebar.checkbox("", value=True, label_visibility="collapsed")
+    use_index = st.sidebar.checkbox("", value=False, label_visibility="collapsed")
 
     # OPTIONAL: Display button choices for the user to pick a validation mode. My implementation of this function changes the 'rigor' of the idea validation.
     # st.sidebar.markdown("<b style='color: darkgreen;'>Choose a validation mode:</b>", unsafe_allow_html=True)
