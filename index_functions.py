@@ -71,8 +71,6 @@ def load_data():
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)
         return index
 
-index = load_data()
-
 #### Additional functions to consider adding that I used in the Innovation CoPilot
 
 # Function to extract keywords from a text
