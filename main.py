@@ -1,9 +1,9 @@
-# Importing necessary libraries and modules
+# Importing necessary libraries
 import streamlit as st
 
-# Importing custom modules for setup and functionalities
+# Importing other files for setup and functionalities
 from setup_st import *
-from helper_functions import generate_response
+from helper_functions import *
 from index_functions import *
 
 # Initialize session state variables if they don't exist
@@ -23,11 +23,19 @@ else:
     st.sidebar.warning("OpenAI API key not provided. Please enter it in the sidebar.")
 
 # Initialize the knowledge base index
+'''
 if 'directory_path' in st.session_state and st.session_state['directory_path']:
     directory_path = st.session_state['directory_path']
     index = construct_index(directory_path)
 else:
     st.sidebar.warning("Directory path isn't uploaded to serve as chatbot knowledge base. Please upload it in sidebar if you'd like to query information.")
+    '''
+# Initialize the index
+index = load_data()
+
+# Check if index is None and display a warning if it is
+if index is None:
+    st.warning("No index could be loaded. Chatbot will proceed without querying additional context from documents.")
 
 # Main chat loop to display messages
 for message in st.session_state.messages:
@@ -38,7 +46,7 @@ for message in st.session_state.messages:
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
-# Accept user input
+# Accept user input and generate response
 if prompt := st.chat_input("How would you like to reply?"):
 
     # Append the user's message to the 'messages' list in session state.
@@ -52,34 +60,53 @@ if prompt := st.chat_input("How would you like to reply?"):
     # Increment total message count
     st.session_state['message_count'] += 1
     
-    # Call generate_response function to get chatbot's reply
-    # This function is assumed to be defined in your helper_functions.py
-    # response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, index, st.session_state['model_name'], st.session_state['temperature'])
+    # Call generate_response function to get chatbot's primary reply
     response_generated = generate_response("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'])
     
-    # Create spinner while response is generating
+    # Call generate_response_index function to get chatbot's reply based on the index, only if index exists
+    if index:
+        response_generated_index = generate_response_index("You are an expert consultant who is great at assisting users with whatever query they have", st.session_state.messages, st.session_state['model_name'], st.session_state['temperature'], index)
+    
+    # Create spinner to indicate to the user that the assistant is generating a response
     with st.spinner('CoPilot is thinking...'):
+        # Create a chat message box for displaying the assistant's response
+        
         with st.chat_message("assistant"):
-            message_placeholder = st.empty()
+            # Initialize an empty string to construct the full response incrementally
             full_response = ""
+            # Create an empty placeholder to stream the assistant's response
+            message_placeholder = st.empty()
+            
+            # Loop through the generator response
             for response in response_generated:
+                # If the full_response is not empty, display it and save to message history
                 if full_response:
                     message_placeholder.markdown(full_response)
-                    st.session_state.messages.append({"role": "assistant", "content": full_message})
+                    st.session_state.messages.append({"role": "assistant", "content": full_response})
+                    
+                # Reset full_response and create a new empty placeholder
                 full_response = ""
                 message_placeholder = st.empty()
-
+                # Break the content into chunks of 10 words each
                 chunks = response["content"].split(' ')
                 full_response = ""
+                
+                # Loop through the chunks to simulate a 'typing' effect
                 for i in range(0, len(chunks), 10):
+                    # Join the next 10 words to form a chunk
                     chunk = ' '.join(chunks[i:i+10])
+                    # Add the chunk to the full response string
                     full_response += chunk + " "  # Add a space at the end of each chunk
-                    message_placeholder.markdown(full_response + "▌")  # Continue streaming current message
-                    time.sleep(0.2)  # Pause for a short time to simulate typing
-
+                    # Display the currently generated text followed by a 'typing' cursor
+                    message_placeholder.markdown(full_response + "▌")
+                    # Wait for a small amount of time to simulate the typing effect
+                    time.sleep(0.2)
+                    
+            # Remove the 'typing' cursor and display the final full response
             message_placeholder.markdown(full_response)
+            
+            # Add the assistant's final full response to the session state message history
             st.session_state.messages.append({"role": "assistant", "content": full_response})
-
-    # Code to update the progress bar
-    # For the sake of this example, I'm incrementing it by 10% each time and assuming a message cap of 10 messages
+            
+    # Code to update the progress bar; assuming a message cap of 10 messages
     current_progress = st.progress(st.session_state['message_count'] / 10)
