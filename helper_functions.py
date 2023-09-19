@@ -23,7 +23,6 @@ def generate_response(prompt, history, model_name, temperature):
       ### Your latest message to me: {chatbot_message}. \n\
       ### Previous conversation history for context: {history}"
 
-      st.write(f"Debug: Full prompt being sent to API: {full_prompt}")
       # Generate a response using OpenAI API
       api_response = openai.ChatCompletion.create(
         model=model_name,
@@ -59,8 +58,6 @@ def generate_response_index(prompt, history, model_name, temperature, chat_engin
       response = chat_engine.chat(last_user_message)  # This assumes you've already set up your chat_engine based on the index
       index_response = response.response
       full_prompt += f"\n### Relevant data from documents: {index_response}"
-
-      st.write(f"Debug: Full prompt being sent to API: {full_prompt}")
 
       # Generate a response using OpenAI API
       api_response = openai.ChatCompletion.create(
