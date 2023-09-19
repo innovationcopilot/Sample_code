@@ -24,11 +24,13 @@ else:
     st.sidebar.warning("OpenAI API key not provided. Please enter it in the sidebar.")
 
 # Setting up indexing functionality
-if 'use_index' in st.session_state and st.session_state['use_index']:
+try:
     index = load_data()
     chat_engine = index.as_chat_engine(chat_mode="condense_question", verbose=True)
-else:
-    st.sidebar.warning("Index is not currently being used. Check the box if you'd like to use the knowledge base for replies.")
+except Exception as e:
+    st.sidebar.error(f"An error occurred while loading indexed data: {e}")
+if not st.session_state['use_index']:
+    st.sidebar.warning("Index is not currently being used. Toggle box above if you'd like to enable it.")
 
 # Displaying the existing chat messages from the user and the chatbot
 for message in st.session_state.messages:  # For every message in the chat history
@@ -48,7 +50,7 @@ if prompt := st.chat_input("How would you like to reply?"):
     st.session_state['message_count'] += 1
     
     # Call either generate_response or generate_response_index based on st.session_state['use_index']
-    if st.session_state.get('use_index', False):
+    if st.session_state['use_index']:
         response_generated = generate_response_index(
             "You are an expert consultant who is great at assisting users with whatever query they have",
             st.session_state.messages,
