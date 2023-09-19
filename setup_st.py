@@ -99,9 +99,9 @@ def get_user_config():
     st.sidebar.markdown("<b style='color: darkgreen;'>Enter OpenAI API Key to use chatbot:</b>", unsafe_allow_html=True)
     api_key = st.sidebar.text_input("", type="password", label_visibility="collapsed")  # Hides the entered text for privacy
 
-    # Display a file upload box to capture user's 'knowledge base' directory so that the chatbot will be able to append information to its responses
+    # Display a checkbox to include users data so that the chatbot will be able to append information to its responses
     st.sidebar.markdown("<b style='color: darkgreen;'>Use indexed data for responses:</b>", unsafe_allow_html=True)
-    use_index = st.sidebar.checkbox("", value=False, label_visibility="collapsed")
+    use_index = st.sidebar.checkbox("", value=st.session_state.get('use_index', False), label_visibility="collapsed")
 
     # OPTIONAL: Display button choices for the user to pick a validation mode. My implementation of this function changes the 'rigor' of the idea validation.
     # st.sidebar.markdown("<b style='color: darkgreen;'>Choose a validation mode:</b>", unsafe_allow_html=True)
