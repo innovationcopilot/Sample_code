@@ -102,6 +102,7 @@ def get_user_config():
     # Display a checkbox to include users data so that the chatbot will be able to append information to its responses
     st.sidebar.markdown("<b style='color: darkgreen;'>Use indexed data for responses:</b>", unsafe_allow_html=True)
     use_index = st.sidebar.checkbox("", value=st.session_state.get('use_index', False), label_visibility="collapsed")
+    st.sidebar.write(f"Use index state: {st.session_state['use_index']}")
 
     # OPTIONAL: Display button choices for the user to pick a validation mode. My implementation of this function changes the 'rigor' of the idea validation.
     # st.sidebar.markdown("<b style='color: darkgreen;'>Choose a validation mode:</b>", unsafe_allow_html=True)
