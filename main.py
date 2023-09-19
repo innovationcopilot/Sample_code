@@ -48,9 +48,11 @@ if prompt := st.chat_input("How would you like to reply?"):
 
     # Increment total message count
     st.session_state['message_count'] += 1
-    
+
+    st.sidebar.write(f"Debug: Using index for this response: {st.session_state['use_index']}")
     # Call either generate_response or generate_response_index based on st.session_state['use_index']
     if st.session_state['use_index']:
+        st.sidebar.write("Debug: Calling generate_response_index()")
         response_generated = generate_response_index(
             "You are an expert consultant who is great at assisting users with whatever query they have",
             st.session_state.messages,
@@ -59,6 +61,7 @@ if prompt := st.chat_input("How would you like to reply?"):
             chat_engine
         )
     else:
+        st.sidebar.write("Debug: Calling generate_response()")
         response_generated = generate_response(
             "You are an expert consultant who is great at assisting users with whatever query they have",
             st.session_state.messages,
