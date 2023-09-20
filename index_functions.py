@@ -1,19 +1,23 @@
-import os
+# Standard Library Imports
+import openai
 import json
 import nltk
-import openai
 import string
 import requests
+
+# Third-Party Imports
 import streamlit as st
 import langchain
-nltk.download('punkt')
-from stop_words import get_stop_words
-from nltk.tokenize import word_tokenize
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.tokenize import word_tokenize
+from stop_words import get_stop_words
 from llama_index import VectorStoreIndex, ServiceContext, Document
 from llama_index.llms import OpenAI
 from llama_index import SimpleDirectoryReader
+
+# Download necessary nltk resources
+nltk.download('punkt')
 
 # Function to load in data found in the 'data' folder of the central repository; To upload your own data, simply remove the existing data in that folder and upload your own. Don't forget to update the prompt below!
 @st.cache_resource(show_spinner=True)
@@ -25,7 +29,8 @@ def load_data():
         index = VectorStoreIndex.from_documents(docs, service_context=service_context)
         return index
 
-#### Additional functions to consider adding that I used in the Innovation CoPilot
+#################################################################################
+# Additional, specific functions I had in the Innovation CoPilot for inspiration:
 
 # Function to extract keywords from a text
 def extract_keywords(text):
