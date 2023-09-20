@@ -1,14 +1,20 @@
+# Third-Party Imports
 import streamlit as st
 
-# 1. Set up the page styling using a column layout
+#1. Function to set up the page's layout and design elements
 def set_design():
+    # Creating a 3-column layout for the Streamlit app
     col1, col2, col3 = st.columns([1, 2, 1])
+    
+    # The main logo will be displayed in the middle column
     with col2:
-        st.image("sample_logo.png", use_column_width=True) # Load an image in from your files (by uploading it to your github cloned repository) and center it in the middle
+        # Loading and displaying a logo image from the repository, and centering it
+        st.image("sample_logo.png", use_column_width=True)
 
+    # Adding a title to the Streamlit app, center-aligned
     st.markdown("<p style='text-align: center; font-size: 30px;'><b>[Sample Generative AI Chatbot]</b></p>", unsafe_allow_html=True)
 
-# 2. Initialize session state variables (illustrative list, not complete)
+# 2. Function to initialize variables that will hold the state of the app (illustrative list, not complete)
 def initialize_session_state():
     # Used to generate the initial message for the conversation
     if 'messages' not in st.session_state:
@@ -36,25 +42,30 @@ def initialize_session_state():
     # if 'current_stage_index' not in st.session_state:
         # st.session_state['current_stage_index'] = 0
 
-# 3. Initialize your sidebar
+# 3. Function to initialize the sidebar UI elements
 def sidebar():
+    # Adding a header to the sidebar
     st.sidebar.markdown("""
     <h1 style='color: black; font-size: 24px;'>Chatbot Configuration</h1>
     """, unsafe_allow_html=True)
 
-# 4. Setup clear button on the sidebar. Clears the conversation and adds an initial message.
+# 4.Function to create a 'Clear Conversation' button on the sidebar
 def clear_button():
+    # Creating the 'Clear Conversation' button
     clear_button = st.sidebar.button("Clear Conversation", key="clear")
-    # Clear the conversation
+    
+    # If the button is clicked, this block will execute and the conversation will clear
     if clear_button:
         st.session_state['messages'] = [
             {"role": "assistant", "content": "Hi there, what can I help you with today?"}
         ]
         st.session_state['message_count'] = 0
 
-# 5. Setup download_convo function to track the conversation for download functionality
+# 5. Function to track the conversation for download functionality
 def download_convo():
+    # Checking if there are enough messages to download
     if 'messages' in st.session_state and len(st.session_state['messages']) > 0:
+        # Concatenating all messages into a single string
         full_conversation = "\n".join([
             f"\n{'-'*20}\n"
             f"Role: {msg['role']}\n"
@@ -64,12 +75,16 @@ def download_convo():
         ])
         return full_conversation
     else:
+        # If not enough messages, show a warning
         st.warning("There aren't enough messages in the conversation to download it. Please refresh the page")
         return ""
 
-# 6. Setup download button
+# 6. Function to create a 'Download Conversation' button on the sidebar
 def download_button():
-    full_conversation = download_convo()  # Get the full_conversation string
+    # Generating the full conversation text
+    full_conversation = download_convo()
+    
+    # Creating a download button for the full conversation
     st.sidebar.download_button(
         label="Download conversation",
         data=full_conversation,
@@ -77,13 +92,13 @@ def download_button():
         mime='text/plain'
     )
 
-#7.  This function is designed to capture the user's preferences for how the chatbot should respond. Possibilities here are endless!
+#7.  This function is designed to capture the user's preferences for how the chatbot should respond. The possibilities here are endless!
 def get_user_config():
     # Define a few AI models the user can choose from.
     model_options = {
         "GPT-3.5 Turbo (16K tokens)": "gpt-3.5-turbo-16k-0613", # Recommended as it has a 16K token limit, much higher than the other two. This allows longer 'memory recall'.
         "GPT-3.5 Turbo": "gpt-3.5-turbo", # Fewer token version of above - not recommended
-        "GPT-4": "gpt-4" # Latest model from OpenAI. Recommended for complex chatbots, though has a lower token limit.
+        "GPT-4": "gpt-4" # Latest model from OpenAI. Recommended for complex chatbots, though has a lower token limit, higher token usage cost, and slower returns.
     }
 
     # Display button choices in the sidebar of the app for the user to pick their desired model from the ones just defined.
