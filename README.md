@@ -13,7 +13,7 @@
   This is a sample set of code from my 'Innovation CoPilot', which I built for the Innovation practice area of the Boston Consulting Group. 
   Much of the code has been redacted and simplified in order to provide a simple 'starter' chatbot from which you can build a more complex chatbot for your use case!
   
-  The full article with additional details and context can be found here: [article link]
+  The full article with additional details and context can be found here: https://medium.com/@gbouslov/from-zero-to-genai-chatbot-hero-29b1f45f6542
 
 ### Prerequisites
   - Python (latest version)
@@ -31,7 +31,7 @@
 ### Features
   This version of the Innovation CoPilot is sanitized and includes four files: main.py, helper_functions.py, index_functions.py, setup_st.py
   
-  Using this template and the article contents here: [article link], you'll be able to:
+  Using this template and the article contents, you'll be able to:
   -Create a Generative AI Chatbot
   -Customize UI/UX via Streamlit
   -Add additional complex functionalities including indexing, user configuration, multi-stage prompts, appending relevant materials, multi-page apps, and more
